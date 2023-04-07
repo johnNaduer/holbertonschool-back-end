@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+""" this REST API, for a given employee ID, returns information 
+about his/her TODO list progress."""
+
 import requests
 import sys
 
@@ -21,4 +25,3 @@ if __name__ == '__main__':
             print("\t {}".format(task))
     else:
         print("Error: {}".format(response.status_code))
-
