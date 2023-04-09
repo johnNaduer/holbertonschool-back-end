@@ -1,27 +1,21 @@
 #!/usr/bin/python3
-"""Using what you did in the task #0, extend your
-Python script to export data in the CSV format"""
-
-import json
+"""Write a Python script that, using this REST"""
 import csv
+from requests import get
+from sys import argv
 
-# Set the user ID to extract data for
-user_id = "123"
+#  print('HTTP header: ', response.headers)
+#  print('URL: ', response.url)
+#  print('Status code: ', response.status_code)
 
-# Load the JSON data
-with open("tasks.json", "r") as f:
-    data = json.load(f)
-
-# Filter the data to only include tasks for the specified user ID
-user_tasks = [task for task in data if task["userId"] == user_id]
-
-# Write the data to a CSV file
-filename = f"{user_id}.csv"
-with open(filename, "w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-    for task in user_tasks:
-        completed_status = "completed" if task["completed"] else "incomplete"
-        writer.writerow([task["userId"], task["username"], completed_status, task["title"]])
-
-print(f"Data written to {filename}")
+if __name__ == "__main__":
+    url = 'https://jsonplaceholder.typicode.com/'
+    id_user = argv[1]
+    users = get('{}users/{}'.format(url, id_user)).json()
+    username = users.get('username')
+    tasks = get('{}todos?userId={}'.format(url, id_user)).json()
+    with open('{}.csv'.format(id_user), 'wt') as file:
+        write_file = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for task in tasks:
+            write_file.writerow([int(id_user), username,
+                                task.get('completed'), task.get('title')])
